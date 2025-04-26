@@ -53,6 +53,7 @@ def delete_task(task_id):
 
     next_id = len(tasks) + 1
 
+    # Though not strictly RESTful, it's helpful to report here if the list becomes empty after deleting
     if not tasks:
         return jsonify({"message": f"Task {task_id} deleted. List is empty!"}), 200
     else:
