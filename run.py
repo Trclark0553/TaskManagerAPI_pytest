@@ -32,6 +32,23 @@ def create_task():
 
     return jsonify(task), 201 #resource created
 
+# DELETE /tasks/task_id. Ex: curl -x delete http://localhost:5000/tasks/1
+@app.route('/tasks/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    global tasks
+
+    #loop through list to find first match, if not found set default=None
+    task = next((t fo t in tasks if t["id"] == task_id), None)
+
+    #report to user task not found, return 404
+    if not task:
+        return jsonify({"error": "Task not found"}), 404
+
+    #modify list to exclude target task id
+    tasks = [t for t in tasks if t["id"] != task_id]
+
+    return '', 204
+
 
 if __name__ == '__main__':
     app.run(debug=True)
