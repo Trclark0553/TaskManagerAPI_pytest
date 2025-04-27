@@ -1,5 +1,5 @@
 import pytest
-from app import app
+from run import app
 
 # Fixture to create a test client for making requests to the Flask app
 @pytest.fixture
@@ -19,7 +19,7 @@ def test_home(client):
 def test_get_empty_tasks(client):
     """Verify that /tasks initially returns an empty list."""
     response = client.get('/tasks')
-    assert response.status_code = 200 #HTTP good
+    assert response.status_code == 200 #HTTP good
     assert response.get_json() == [] #assume empty list
 
 # Test: Creating new task is added to list
