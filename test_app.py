@@ -1,11 +1,12 @@
 import pytest
-from run import app
+from run import app, tasks
 
 # Fixture to create a test client for making requests to the Flask app
 @pytest.fixture
 def client():
     app.config['TESTING'] = True #Enable test mode for better error messages
     with app.test_client() as client:
+        tasks.clear() # Clear tasks before each test
         yield client 
 
 # Smoke Test: Home route returns 200 OK and correct message
