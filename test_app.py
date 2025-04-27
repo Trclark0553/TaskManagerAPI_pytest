@@ -45,12 +45,15 @@ def test_create_task(client):
 # Regression Test: Deleteing a task removes it from the list
 @pytest.mark.regression
 def test_delete_task(client):
-    """Verify that DELETE /tasks/<id> removes it from teh list"""
+    """Verify that DELETE /tasks/<id> removes it from the list"""
     # Create a task to delete
-    client.post('/tasks', json={"title": "Do Laundry"})
+    response = client.post('/tasks', json={"title": "Do Laundry"})
+
+    # Extract dynamically generated task id
+    task_id = response.get_json()["id"]
 
     # Delete it
-    response = client.delete('/tasks/1')
+    response = client.delete(f'/tasks/{task_id}')
     assert response.status_code == 200 #HTTP success
 
     # Verify list is empty after
