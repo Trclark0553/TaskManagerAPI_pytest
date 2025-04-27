@@ -8,21 +8,24 @@ def client():
     with app.test_client() as client:
         yield client 
 
-# Test: Home route returns 200 OK and correct message
+# Smoke Test: Home route returns 200 OK and correct message
+@pytest.mark.smoke 
 def test_home(client):
     """Verify that home page is reachable and displays correct message."""
     response = client.get('/') # Send GET request to home
-    assert response.status_code == 200 # Verify HTTP response
+    assert response.status_code == 200, "Expected 200 OK status code" #HTTP good
     assert b"Task Manager API is running..." in response.data # Verify welcome test in body
 
-# Test: Tasks returns an empty list initially
+# Smoke Test: Tasks returns an empty list initially
+@pytest.mark.smoke 
 def test_get_empty_tasks(client):
     """Verify that /tasks initially returns an empty list."""
     response = client.get('/tasks')
-    assert response.status_code == 200 #HTTP good
-    assert response.get_json() == [] #assume empty list
+    assert response.status_code == 200, "Expected 200 OK status code" #HTTP good
+    assert response.get_json() == [], "Expected empty list of tasks" #Empty list
 
-# Test: Creating new task is added to list
+# Regression Test: Creating new task is added to list
+@pytest.mark.regression
 def test_create_task(client):
     """Verify that POST /tasks creates a new tASK"""
     task_data= {"title": "Buy groceries"}
