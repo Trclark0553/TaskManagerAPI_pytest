@@ -40,3 +40,26 @@ def test_create_task(client):
     tasks_list = response.get_json()
     assert len(tasks_list) == 1 #Test length is 1
     assert tasks_list[0]["title"] == "Buy groceries" #Test task added correctly
+
+# Regression Test: Deleteing a task removes it from the list
+@pytest.mark.regression
+def test_delete_task(client):
+    """Verify that DELETE /tasks/<id> removes it from teh list"""
+    # Create a task to delete
+    client.post('/tasks', json={"title": "Do Laundry"})
+
+    # Delete it
+    response = client.delete('/tasks/1')
+    assert response.status_code == 200 #HTTP success
+
+    # Verify list is empty after
+    response = client.get('/tasks')
+    assert response.get_json() == []
+
+# Regression Test: Deleting a non-existent task returns 404
+@pytest.mark.regression
+def test_delete_non_existent_task(client):
+    """Verify that deleting a non-existent task returns 404"""
+    response = client.delete('/tasks/999') # task 999 does not exist
+    assert response.status_code == 404
+    assert response.get_json()["error"] == "Task 999 not found." #Error msg
